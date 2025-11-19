@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Motion Monitor</title>
+  <style>
+    body {
+      background: #000;
+      color: #b30000;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      padding-top: 100px;
+    }
+    .container {
+      border: 2px solid #300;
+      padding: 30px;
+      width: 50%;
+      margin: auto;
+      background: rgba(20, 0, 0, 0.4);
+      box-shadow: 0 0 20px #400;
+    }
+    .glitch {
+      font-size: 40px;
+      letter-spacing: 2px;
+      animation: glitch 1.5s infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px #300; }
+      50% { text-shadow: -2px -2px #900; }
+      100% { text-shadow: 2px 2px #300; }
+    }
+    .safe {
+      color: #444;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    {% if latest.motion_detected %}
+      <div class="glitch">⚠ MOTION DETECTED ⚠</div>
+      <p>Last Seen: {{ latest.timestamp }}</p>
+      <p>Count: {{ latest.motion_count }}</p>
+      <p>Duration: {{ latest.duration }} sec</p>
+    {% else %}
+      <div class="safe">No motion detected… yet.</div>
+      <p>Last Motion: {{ latest.last_motion_time }}</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>
