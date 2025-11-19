@@ -4,45 +4,73 @@
   <meta charset="UTF-8">
   <title>Motion Monitor</title>
   <style>
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("/static/image.jpg") center/cover;
+      filter: blur(8px);
+      z-index: -1;
+    }
+
     body {
-      background: #000;
+      background: rgba(22, 7, 3, 0.7);
       color: #b30000;
       font-family: "Courier New", monospace;
       text-align: center;
       padding-top: 100px;
     }
+
     .container {
       border: 2px solid #300;
       padding: 30px;
       width: 50%;
       margin: auto;
-      background: rgba(20, 0, 0, 0.4);
+      background: rgba(90,13,0,0.4);
       box-shadow: 0 0 20px #400;
+      transition: all 0.5s ease; /* smooth color change */
     }
+
+    .container.safe-mode {
+      border: 2px solid #0a0;       /* green border */
+      background: rgba(0,50,0,0.4); /* greenish transparent background */
+      box-shadow: 0 0 20px #0f0;    /* green glow */
+      color: #0f0;                  /* green text */
+    }
+
     .glitch {
       font-size: 40px;
       letter-spacing: 2px;
-      animation: glitch 1.5s infinite;
+
     }
+
     @keyframes glitch {
       0% { text-shadow: 2px 2px #300; }
       50% { text-shadow: -2px -2px #900; }
       100% { text-shadow: 2px 2px #300; }
     }
+
     .safe {
-      color: #444;
       font-size: 22px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
+  <div class="container {% if not latest.motion_detected %}safe-mode{% endif %}">
     {% if latest.motion_detected %}
       <div class="glitch">⚠ MOTION DETECTED ⚠</div>
       <p>Last Seen: {{ latest.timestamp }}</p>
-      <p>Count: {{ latest.motion_count }}</p>
-      <p>Duration: {{ latest.duration }} sec</p>
     {% else %}
       <div class="safe">No motion detected… yet.</div>
       <p>Last Motion: {{ latest.last_motion_time }}</p>
